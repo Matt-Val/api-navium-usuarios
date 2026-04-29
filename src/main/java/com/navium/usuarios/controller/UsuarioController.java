@@ -1,5 +1,6 @@
 package com.navium.usuarios.controller;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import com.navium.usuarios.model.Usuario;
 import com.navium.usuarios.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,7 @@ public class UsuarioController {
 
     // Consultar todos los usuarios (para administración)
     @GetMapping("/{id}")
+    @SecurityRequirement(name = "bearerAuth") // Indica que este endpoint requiere autenticación JWT
     public ResponseEntity<?> obtenerPorId(@PathVariable Long id) {
         try{ 
             // Intenta buscar el usuario por ID
@@ -42,6 +44,7 @@ public class UsuarioController {
 
     // Dar de baja a un usuario (desactivar su cuenta)
     @DeleteMapping("/{id}")
+    @SecurityRequirement(name = "bearerAuth") // Indica que este endpoint requiere autenticación JWT
     public ResponseEntity<?> darDeBaja(@PathVariable Long id) {
         try{ 
             // Intenta dar de baja al usuario
