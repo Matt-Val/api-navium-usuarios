@@ -32,7 +32,7 @@ public class SecurityConfig {
             // Reglas de autorización para los endpoints
             .authorizeHttpRequests(auth -> auth
                 // Rutas Públicas, se permite el acceso para poder registrarse y obtener el token
-                .requestMatchers("/api/auth/login", "/api/usuarios", "swagger-ui/**", "v3/api-docs/**", "/swagger-ui.html").permitAll()
+                .requestMatchers("/api/auth/login", "/api/usuarios", "/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
                 // Rutas Protegidas, cualquier otra petición requiere que el usuario esté autenticado
                 .anyRequest().authenticated()
             )
