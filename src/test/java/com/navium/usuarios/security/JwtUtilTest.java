@@ -20,7 +20,7 @@ class JwtUtilTest {
         ReflectionTestUtils.setField(util, "secret", secret);
 
         long start = System.currentTimeMillis();
-        String token = util.generarToken("test@navium.com", "ROL_ADMIN");
+        String token = util.generarToken("test@navium.com", "ROL_OPERADOR");
 
         Claims claims = Jwts.parserBuilder()
             .setSigningKey(Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8)))
@@ -29,7 +29,9 @@ class JwtUtilTest {
             .getBody();
 
         assertEquals("test@navium.com", claims.getSubject());
-        assertEquals("ROL_ADMIN", claims.get("rol"));
+        assertEquals("ROL_OPERADOR", claims.get("rol"));
+        assertNotNull(claims.get("roles"));
+        assertTrue(((java.util.List<?>) claims.get("roles")).contains("ROL_OPERADOR"));
 
         Date expiration = claims.getExpiration();
         assertNotNull(expiration);

@@ -38,11 +38,11 @@ class AuthControllerTest {
                 Usuario usuario = new Usuario();
                 usuario.setEmail("test@navium.com");
                 usuario.setPassword("hashed");
-                usuario.setRol("ROL_ADMIN");
+                usuario.setRol("ROL_OPERADOR");
                 usuario.setActivo(true);
                 when(repository.findByEmail("test@navium.com")).thenReturn(Optional.of(usuario));
                 when(passwordEncoder.matches("plain", "hashed")).thenReturn(true);
-                when(jwtUtil.generarToken("test@navium.com", "ROL_ADMIN")).thenReturn("token-123");
+                when(jwtUtil.generarToken("test@navium.com", "ROL_OPERADOR")).thenReturn("token-123");
                 ResponseEntity<?> response = controller.login(Map.of("email", "test@navium.com", "password", "plain"));
                 assertEquals(HttpStatus.OK, response.getStatusCode());
                 assertEquals("token-123", ((Map<?, ?>) response.getBody()).get("token"));
