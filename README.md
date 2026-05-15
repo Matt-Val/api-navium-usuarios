@@ -13,6 +13,5 @@ Este microservicio es responsable de centralizar el control de acceso, la autent
 | :--- | :--- | :--- | :--- |
 | `POST` | `/api/usuarios` | **Registro** | Creación de un nuevo usuario en el sistema. |
 | `POST` | `/api/auth/login` | **Autenticación** | Valida credenciales y emite el token JWT. |
-| `GET` | `/api/usuarios/{id}` | **Consulta** | Obtiene el perfil de un usuario específico. |
-| `PUT` | `/api/usuarios/{id}` | **Actualización** | Modifica datos del perfil del usuario. |
-| `DELETE` | `/api/usuarios/{id}` | **Baja Lógica** | Desactiva la cuenta del usuario sin borrar historial. |
+| `GET` | `/api/usuarios/{id}` | **Consulta** | Obtiene el perfil de un usuario específico. (Requiere Token JWT) |
+| `DELETE` | `/api/usuarios/{id}` | **Baja Lógica** | Desactiva la cuenta del usuario sin borrar historial. (Requiere Token JWT) |
