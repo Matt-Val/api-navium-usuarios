@@ -1,6 +1,7 @@
 package com.navium.usuarios.controller;
 
 import com.navium.usuarios.model.Usuario;
+import com.navium.usuarios.model.UsuarioRol;
 import com.navium.usuarios.repository.UsuarioRepository;
 import com.navium.usuarios.security.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,8 +40,11 @@ public class AuthController {
                     return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of("error", "La cuenta se encuentra desactivada"));
                 }
 
+                UsuarioRol rol = UsuarioRol.fromValue(usuario.getRol())
+                    .orElseThrow(() -> new IllegalStateException("Rol invalido configurado para el usuario"));
+
                 // Generamos el Token JWT
-                String token = jwtUtil.generarToken(usuario.getEmail(), usuario.getRol());
+                String token = jwtUtil.generarToken(usuario.getEmail(), rol.toClaim());
 
                 // Devolvemos el token en la respuesta
                 return ResponseEntity.ok(Map.of("token", token));
