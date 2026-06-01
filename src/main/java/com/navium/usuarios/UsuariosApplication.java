@@ -1,6 +1,5 @@
 package com.navium.usuarios;
 
-
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
 import io.swagger.v3.oas.annotations.info.Info;
@@ -17,9 +16,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 	scheme = "bearer"
 )
 public class UsuariosApplication {
-
 	public static void main(String[] args) {
 		SpringApplication.run(UsuariosApplication.class, args);
 	}
-
 }
