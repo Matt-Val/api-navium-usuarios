@@ -1,6 +1,7 @@
 package com.navium.usuarios.service;
 
 import com.navium.usuarios.model.Usuario;
+import com.navium.usuarios.model.UsuarioRol;
 import com.navium.usuarios.repository.UsuarioRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -32,6 +33,7 @@ class UsuarioServiceTest {
         Usuario usuario = new Usuario();
         usuario.setEmail("test@navium.com");
         usuario.setPassword("plain");
+        usuario.setRol(UsuarioRol.ROL_SUCURSAL);
 
         when(passwordEncoder.encode("plain")).thenReturn("hashed");
         when(repository.save(usuario)).thenReturn(usuario);
@@ -39,8 +41,22 @@ class UsuarioServiceTest {
         Usuario resultado = service.registrar(usuario);
 
         assertEquals("hashed", resultado.getPassword());
+        assertEquals(UsuarioRol.ROL_SUCURSAL, resultado.getRol());
         verify(passwordEncoder).encode("plain");
         verify(repository).save(usuario);
+    }
+
+    @Test
+    void registrar_sinRol_lanzaExcepcion() {
+        Usuario usuario = new Usuario();
+        usuario.setEmail("test@navium.com");
+        usuario.setPassword("plain");
+        usuario.setRol(null);
+
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> service.registrar(usuario));
+
+        assertEquals("Rol invalido. Valores permitidos: ROL_CENTRO_MANDO, ROL_SUCURSAL, ROL_OPERADOR", ex.getMessage());
+        verifyNoInteractions(passwordEncoder, repository);
     }
 
     @Test

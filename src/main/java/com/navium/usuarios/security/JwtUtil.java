@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
+import java.util.List;
 
 @Component
 public class JwtUtil {
@@ -19,6 +20,8 @@ public class JwtUtil {
                 .setSubject(email)
                 // Claims adicionales: Agregamos rol del usuario
                 .claim("rol", rol)
+                // Compatibilidad con librería de autorización
+                .claim("roles", List.of(rol))
                 // Fecha de emisión del token (Momento exacto del login)
                 .setIssuedAt(new Date())
                 // Fecha de expiración del token (10 horas desde la emisión)
