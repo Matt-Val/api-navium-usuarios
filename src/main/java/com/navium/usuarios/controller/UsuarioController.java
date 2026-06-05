@@ -21,6 +21,8 @@ public class UsuarioController {
         try{ 
             // Intenta registrar un usuario
             return ResponseEntity.ok(service.registrar(usuario));
+        } catch(IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         } catch(Exception e) { 
             // Si ocurre un error (como email o rut duplicado), devuelve un mensaje de error
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error al registrar usuario: " + e.getMessage());

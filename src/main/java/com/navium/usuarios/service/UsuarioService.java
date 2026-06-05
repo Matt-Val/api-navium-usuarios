@@ -1,7 +1,6 @@
 package com.navium.usuarios.service;
 
 import com.navium.usuarios.model.Usuario;
-import com.navium.usuarios.model.UsuarioRol;
 import com.navium.usuarios.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -19,9 +18,11 @@ public class UsuarioService {
     private PasswordEncoder passwordEncoder;
 
     public Usuario registrar(Usuario usuario) {
-        UsuarioRol rol = UsuarioRol.fromValue(usuario.getRol())
-                .orElseThrow(() -> new IllegalArgumentException("Rol invalido: " + usuario.getRol()));
-        usuario.setRol(rol.toClaim());
+        if (usuario.getRol() == null) {
+            throw new IllegalArgumentException(
+                    "Rol invalido. Valores permitidos: ROL_CENTRO_MANDO, ROL_SUCURSAL, ROL_OPERADOR"
+            );
+        }
         // Encriptar la contraseña con BCrypt antes de guardar
         usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
         return repository.save(usuario);

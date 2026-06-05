@@ -38,11 +38,6 @@
 	</repositories>
 
 	<dependencies>
-		<dependency>
-			<groupId>com.github.Matt-Val</groupId>
-			<artifactId>navium-security-lib</artifactId>
-			<version>v.1.1.2</version>
-		</dependency>
 		
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
