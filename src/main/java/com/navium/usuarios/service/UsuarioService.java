@@ -18,6 +18,11 @@ public class UsuarioService {
     private PasswordEncoder passwordEncoder;
 
     public Usuario registrar(Usuario usuario) {
+        if (usuario.getRol() == null) {
+            throw new IllegalArgumentException(
+                    "Rol invalido. Valores permitidos: ROL_CENTRO_MANDO, ROL_SUCURSAL, ROL_OPERADOR"
+            );
+        }
         // Encriptar la contraseña con BCrypt antes de guardar
         usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
         return repository.save(usuario);

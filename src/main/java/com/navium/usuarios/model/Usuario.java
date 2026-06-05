@@ -10,22 +10,26 @@ public class Usuario {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
-    @Column(unique = true, nullable = false)
+    @Column(name= "rut", unique = true, nullable = false)
     private String rut;
 
-    @Column(nullable = false)
+    @Column(name = "nombre", nullable = false)
     private String nombre;
 
-    @Column(unique = true, nullable = false)
+    @Column(name = "email", unique = true, nullable = false)
     private String email;
 
-    @Column(nullable = false)
+    @Column(name = "password", nullable = false)
     private String password;
 
-    private String rol; // ROL_CENTRO_MANDO, ROL_SUCURSAL, ROL_OPERADOR
+    @Column(name = "rol")
+    @Enumerated(EnumType.STRING)
+    private UsuarioRol rol;
 
+    @Column(name = "activo")
     private Boolean activo = true;
     
 }
