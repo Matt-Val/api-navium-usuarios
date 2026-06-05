@@ -39,9 +39,9 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>com.github.Matt-Val</groupId>
+			<groupId>com.navium</groupId>
 			<artifactId>navium-security-lib</artifactId>
-			<version>v.1.1.2</version>
+			<version>1.1.1</version>
 		</dependency>
 		
 		<dependency>
