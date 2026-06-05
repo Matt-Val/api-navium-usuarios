@@ -57,7 +57,7 @@ public class SecurityConfig {
         // IMPORTANTE: allowCredentials(true) permite que el navegador envíe cookies
         configuration.setAllowCredentials(true);
         // Define aquí los orígenes permitidos (ej: tu frontend en React/Angular)
-        configuration.setAllowedOrigins(List.of("http://localhost:3000", "http://localhost:4200")); 
+        configuration.setAllowedOrigins(List.of("http://localhost:3000", "http://localhost:4200", "http://localhost:5173")); 
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
         configuration.setExposedHeaders(List.of("Set-Cookie"));

@@ -42,7 +42,7 @@ public class AuthController {
                 }
 
                 // Generamos el Token JWT
-                String token = jwtUtil.generarToken(usuario.getEmail(), usuario.getRol());
+                String token = jwtUtil.generarToken(usuario.getEmail(), usuario.getRol().name());
 
                 // Creamos la cookie HttpOnly para mayor seguridad
                 ResponseCookie cookie = ResponseCookie.from("token", token)
