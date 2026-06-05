@@ -1,6 +1,7 @@
 package com.navium.usuarios.controller;
 
 import com.navium.usuarios.model.Usuario;
+import com.navium.usuarios.model.UsuarioRol;
 import com.navium.usuarios.repository.UsuarioRepository;
 import com.navium.usuarios.security.JwtUtil;
 import org.junit.jupiter.api.Test;
@@ -38,14 +39,17 @@ class AuthControllerTest {
                 Usuario usuario = new Usuario();
                 usuario.setEmail("test@navium.com");
                 usuario.setPassword("hashed");
-                usuario.setRol("ROL_ADMIN");
+                usuario.setRol(UsuarioRol.ROL_CENTRO_MANDO);
                 usuario.setActivo(true);
                 when(repository.findByEmail("test@navium.com")).thenReturn(Optional.of(usuario));
                 when(passwordEncoder.matches("plain", "hashed")).thenReturn(true);
-                when(jwtUtil.generarToken("test@navium.com", "ROL_ADMIN")).thenReturn("token-123");
+                when(jwtUtil.generarToken("test@navium.com", "ROL_CENTRO_MANDO")).thenReturn("token-123");
                 ResponseEntity<?> response = controller.login(Map.of("email", "test@navium.com", "password", "plain"));
                 assertEquals(HttpStatus.OK, response.getStatusCode());
-                assertEquals("token-123", ((Map<?, ?>) response.getBody()).get("token"));
+                assertEquals("Login exitoso", ((Map<?, ?>) response.getBody()).get("message"));
+                assertEquals("test@navium.com", ((Map<?, ?>) response.getBody()).get("user"));
+                assertEquals(UsuarioRol.ROL_CENTRO_MANDO, ((Map<?, ?>) response.getBody()).get("rol"));
+                assertNotNull(response.getHeaders().getFirst("Set-Cookie"));
         }
 
         @Test
