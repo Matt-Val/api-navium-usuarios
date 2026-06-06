@@ -3,6 +3,10 @@ package com.navium.usuarios.controller;
 import com.navium.usuarios.model.Usuario;
 import com.navium.usuarios.repository.UsuarioRepository;
 import com.navium.usuarios.security.JwtUtil;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -15,6 +19,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/auth")
+@Tag(name = "Autenticación", description = "Endpoints para el manejo de sesiones y generación de tokens JWT")
 public class AuthController {
 
     @Autowired
@@ -24,6 +29,13 @@ public class AuthController {
     @Autowired
     private JwtUtil jwtUtil;
 
+    @Operation(summary = "Iniciar sesión", description = "Valida las credenciales y genera un token JWT almacenado en una Cookie HttpOnly.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Login exitoso, se devuelve la información básica del usuario y el token en una cookie"),
+        @ApiResponse(responseCode = "401", description = "Credenciales inválidas (correo o contraseña incorrectos)"),
+        @ApiResponse(responseCode = "403", description = "La cuenta está desactivada"),
+        @ApiResponse(responseCode = "500", description = "Error interno del servidor")
+    })
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody Map<String, String> credenciales) {
         try{ 
@@ -72,6 +84,8 @@ public class AuthController {
         }
     }
 
+    @Operation(summary = "Cerrar sesión", description = "Borra la cookie del token JWT en el cliente.")
+    @ApiResponse(responseCode = "200", description = "Sesión cerrada exitosamente")
     @PostMapping("/logout")
     public ResponseEntity<?> logout() {
         // Para cerrar sesión, enviamos la cookie con maxAge 0 para que el navegador la borre

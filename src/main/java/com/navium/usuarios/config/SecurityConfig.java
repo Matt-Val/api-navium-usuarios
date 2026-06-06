@@ -1,6 +1,5 @@
 package com.navium.usuarios.config;
 
-import com.navium.usuarios.security.JwtAuthorizationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -10,7 +9,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -29,7 +27,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http, JwtAuthorizationFilter jwtFilter) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
             // Configuramos CORS antes que el resto
             .cors(Customizer.withDefaults())
@@ -39,14 +37,9 @@ public class SecurityConfig {
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             // Reglas de autorización para los endpoints
             .authorizeHttpRequests(auth -> auth
-                // Rutas Públicas
-                .requestMatchers("/api/auth/login", "/api/usuarios", "/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
-                // Rutas Protegidas
-                .anyRequest().authenticated()
-            )
-
-            // Colocamos el filtro JWT antes del filtro de autenticación de Spring Security
-            .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+                // En este microservicio permitimos todo porque el BFF es el que valida el token
+                .anyRequest().permitAll()
+            );
 
         return http.build();
     }
