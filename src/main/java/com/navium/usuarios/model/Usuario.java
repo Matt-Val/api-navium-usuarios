@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "usuarios", schema = "usuarios")
+@Table(name = "usuarios", schema = "navium")
 @Schema(description = "Modelo que representa a un usuario en el sistema Navium")
 public class Usuario {
 
