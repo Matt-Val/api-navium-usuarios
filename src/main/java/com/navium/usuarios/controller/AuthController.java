@@ -7,7 +7,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
@@ -22,12 +21,15 @@ import java.util.Optional;
 @Tag(name = "Autenticación", description = "Endpoints para el manejo de sesiones y generación de tokens JWT")
 public class AuthController {
 
-    @Autowired
     private UsuarioRepository repository;
-    @Autowired
     private PasswordEncoder passwordEncoder;
-    @Autowired
     private JwtUtil jwtUtil;
+
+    public AuthController(UsuarioRepository repository, PasswordEncoder passwordEncoder, JwtUtil jwtUtil) { 
+        this.repository = repository;
+        this.passwordEncoder = passwordEncoder;
+        this.jwtUtil = jwtUtil;
+    }
 
     @Operation(summary = "Iniciar sesión", description = "Valida las credenciales y genera un token JWT almacenado en una Cookie HttpOnly.")
     @ApiResponses(value = {
