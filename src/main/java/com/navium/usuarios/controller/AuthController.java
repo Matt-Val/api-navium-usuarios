@@ -7,12 +7,14 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.GetMapping;
+import io.jsonwebtoken.Claims;
 import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 import java.util.Optional;
@@ -22,12 +24,15 @@ import java.util.Optional;
 @Tag(name = "Autenticación", description = "Endpoints para el manejo de sesiones y generación de tokens JWT")
 public class AuthController {
 
-    @Autowired
     private UsuarioRepository repository;
-    @Autowired
     private PasswordEncoder passwordEncoder;
-    @Autowired
     private JwtUtil jwtUtil;
+
+    public AuthController(UsuarioRepository repository, PasswordEncoder passwordEncoder, JwtUtil jwtUtil) { 
+        this.repository = repository;
+        this.passwordEncoder = passwordEncoder;
+        this.jwtUtil = jwtUtil;
+    }
 
     @Operation(summary = "Iniciar sesión", description = "Valida las credenciales y genera un token JWT almacenado en una Cookie HttpOnly.")
     @ApiResponses(value = {
@@ -99,5 +104,25 @@ public class AuthController {
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, cookie.toString())
                 .body(Map.of("message", "Sesión cerrada correctamente"));
+    }
+
+    @Operation(summary = "Usuario actual", description = "Devuelve el email y rol del usuario autenticado, leídos desde la cookie del token.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Datos del usuario autenticado"),
+        @ApiResponse(responseCode = "401", description = "No hay sesión activa o el token es inválido")
+    })
+    @GetMapping("/me")
+    public ResponseEntity<?> me(@CookieValue(value = "token", required = false) String token) {
+        if (token == null || token.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "No hay sesión activa"));
+        }
+        try {
+            Claims claims = jwtUtil.obtenerClaims(token);
+            String email = claims.getSubject();
+            String rol = claims.get("rol", String.class);
+            return ResponseEntity.ok(Map.of("email", email, "rol", rol));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "Token inválido o expirado"));
+        }
     }
 }
