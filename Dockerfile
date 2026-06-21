@@ -1,14 +1,18 @@
-# Usamos una versión ligera de Java 17
-FROM eclipse-temurin:17-jdk-alpine
-
-# Creamos una carpeta de trabajo dentro del contenedor
+# Etapa 1: Construcción (Builder)
+FROM maven:3.9.6-eclipse-temurin-17 AS builder
 WORKDIR /app
 
-# Copiamos el archivo .jar generado al contenedor
-COPY target/*.jar app.jar
+COPY pom.xml .
+RUN mvn dependency:go-offline -B
 
-# Le decimos a Docker que este contenedor usará el puerto 8081
+COPY src ./src
+RUN mvn clean package -DskipTests
+
+# Etapa 2: Ejecución (Runtime)
+FROM eclipse-temurin:17-jdk-alpine
+WORKDIR /app
+COPY --from=builder /app/target/usuarios-0.0.1-SNAPSHOT.jar app.jar
+
 EXPOSE 8081
 
-# El comando que ejecutará al encender
 ENTRYPOINT ["java", "-jar", "app.jar"]
