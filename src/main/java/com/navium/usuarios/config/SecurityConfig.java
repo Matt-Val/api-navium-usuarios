@@ -13,7 +13,6 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import java.util.Arrays;
 import java.util.List;
 
 @Configuration
@@ -44,24 +43,21 @@ public class SecurityConfig {
         return http.build();
     }
 
-    @Bean
+        @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         // IMPORTANTE: allowCredentials(true) permite que el navegador envíe cookies
         configuration.setAllowCredentials(true);
-        // Define aquí los orígenes permitidos (ej: tu frontend en React/Angular)
-        configuration.setAllowedOrigins(List.of(
-            "http://localhost:5170",
-            "http://localhost:5173",
-            "http://localhost:5174",
-            "http://localhost:5175",
-            "http://localhost:3000",
-            "http://localhost:4200"
-        )); 
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
-        configuration.setExposedHeaders(List.of("Set-Cookie"));
         
+        // Usamos OriginPatterns con "*" para permitir CUALQUIER origen
+        configuration.setAllowedOriginPatterns(List.of("*")); 
+        
+        // Permitimos todos los métodos (GET, POST, PUT, DELETE, OPTIONS, etc.)
+        configuration.setAllowedMethods(List.of("*"));
+        
+        // Permitimos todos los headers
+        configuration.setAllowedHeaders(List.of("*"));
+
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
