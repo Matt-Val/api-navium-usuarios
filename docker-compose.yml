@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  api-usuarios:
+    image: ${DOCKER_USERNAME}/api-usuarios:latest
+    container_name: navium-api-usuarios
+    ports:
+      - "8081:8081"
+    environment:
+      - DB_URL=${DB_URL}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - JWT_SECRET=${JWT_SECRET}
+    restart: always

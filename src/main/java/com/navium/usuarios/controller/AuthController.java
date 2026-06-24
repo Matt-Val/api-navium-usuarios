@@ -64,10 +64,10 @@ public class AuthController {
                 // Creamos la cookie HttpOnly para mayor seguridad
                 ResponseCookie cookie = ResponseCookie.from("token", token)
                         .httpOnly(true)
-                        .secure(false) // Cambiar a true en producción con HTTPS
+                        .secure(true) // OBLIGATORIO para SameSite=None en API Gateway
                         .path("/")
                         .maxAge(10 * 60 * 60) // 10 horas (coincide con la expiración del token)
-                        .sameSite("Lax")
+                        .sameSite("None") // PERMITE COOKIES CRUZADAS EN S3
                         .build();
 
                 // Devolvemos el mensaje de éxito y configuramos la cookie
@@ -96,9 +96,10 @@ public class AuthController {
         // Para cerrar sesión, enviamos la cookie con maxAge 0 para que el navegador la borre
         ResponseCookie cookie = ResponseCookie.from("token", "")
                 .httpOnly(true)
-                .secure(false)
+                .secure(true) // OBLIGATORIO para SameSite=None
                 .path("/")
                 .maxAge(0)
+                .sameSite("None") // PERMITE COOKIES CRUZADAS EN S3
                 .build();
 
         return ResponseEntity.ok()
